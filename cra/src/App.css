@@ -1,0 +1,18 @@
+.cell {
+  border: solid 1px black;
+}
+
+.match.block-a {
+  border: solid 1px red;
+  background-color: red;
+}
+
+.match.block-b {
+  border: solid 1px blue;
+  background-color: blue
+}
+
+.match.block-c {
+  border: solid 1px green;
+  background-color: green;
+}
