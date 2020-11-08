@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import classnames from 'classnames';
 import './App.css';
 import { makeLevel, getIndex } from './make-level';
 
-function Column({ x, y, value, level }) {
+const LevelContext = React.createContext();
+
+function Column({ x, y, value }) {
+  const level = useContext(LevelContext);
   const listIndex = getIndex({ x, y }, level.width);
   const matchLength = level.matchCounts[listIndex];
   return (
@@ -13,24 +16,26 @@ function Column({ x, y, value, level }) {
   );
 }
 
-function Row({ columns, y, level }) {
+function Row({ columns, y }) {
+  const level = useContext(LevelContext);
   return (
       <tr key={y}>
         {columns.map((column, x) => {
           const listIndex = getIndex({ x, y }, level.width);
-          return (<Column key={listIndex} x={x} y={y} value={column} level={level} />)
+          return (<Column key={listIndex} x={x} y={y} value={column} />)
         })}
       </tr>
   );
 }
 
-function Level({ level }) {
+function Level() {
+  const level = useContext(LevelContext);
   return (
     <table>
       <tbody>
         {level.matrix.map((row, y) => {
           return (
-              <Row key={y} columns={row} y={y} level={level} />
+              <Row key={y} columns={row} y={y} />
           );
         })}
       </tbody>
@@ -40,10 +45,12 @@ function Level({ level }) {
 function App() {
   const [level, setLevel] = useState(makeLevel());
   return (
-    <div className="App">
-      <Level level={level} />
-      <button onClick={() => { setLevel(makeLevel()); }}>Reload</button>
-    </div>
+    <LevelContext.Provider value={level}>
+      <div className="App">
+        <Level />
+        <button onClick={() => { setLevel(makeLevel()); }}>Reload</button>
+      </div>
+    </LevelContext.Provider>
   );
 }
 
